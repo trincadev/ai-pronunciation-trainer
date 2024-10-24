@@ -4,9 +4,10 @@ import os
 from flask_cors import CORS
 import json
 
-import lambdaTTS
-import lambdaSpeechToScore
-import lambdaGetSample
+from aip_trainer.lambdas import lambdaTTS
+from aip_trainer.lambdas import lambdaSpeechToScore
+from aip_trainer.lambdas import lambdaGetSample
+
 
 app = Flask(__name__)
 cors = CORS(app)

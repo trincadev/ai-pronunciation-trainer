@@ -1,9 +1,11 @@
-import WordMetrics
-from ortools.sat.python import cp_model
-import numpy as np
-from string import punctuation
-from dtwalign import dtw_from_distance_matrix
 import time
+from string import punctuation
+
+import numpy as np
+from dtwalign import dtw_from_distance_matrix
+from ortools.sat.python import cp_model
+
+from . import WordMetrics, app_logger
 
 offset_blank = 1
 TIME_THRESHOLD_MAPPING = 5.0
@@ -77,7 +79,8 @@ def get_best_path_from_distance_matrix(word_distance_matrix):
                 (solver.Value(estimated_words_order[word_idx])))
 
         return np.array(mapped_indices, dtype=int)
-    except:
+    except Exception as ex:
+        app_logger.error(f"ex:{ex}.")
         return []
 
 

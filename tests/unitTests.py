@@ -1,11 +1,11 @@
+import json
 import unittest
 
-import ModelInterfaces
-import lambdaGetSample
-import RuleBasedModels
 import epitran
-import json
-import pronunciationTrainer
+
+from aip_trainer.models import ModelInterfaces, RuleBasedModels
+from aip_trainer import pronunciationTrainer
+from aip_trainer.lambdas import lambdaGetSample
 
 
 def test_category(category: int, threshold_min: int, threshold_max: int):
@@ -40,12 +40,12 @@ class TestDataset(unittest.TestCase):
         self.assertTrue(test_category(3, 20, 10000))
 
 
-def check_phonem_converter(converter: ModelInterfaces.ITextToPhonemModel, input: str, expected_output: str):
-    output = converter.convertToPhonem(input)
+def check_phonem_converter(converter: ModelInterfaces.ITextToPhonemModel, input_phonem: str, expected_output: str):
+    output = converter.convertToPhonem(input_phonem)
 
     is_correct = output == expected_output
     if not is_correct:
-        print('Conversion from "', input, '" should be "',
+        print('Conversion from "', input_phonem, '" should be "',
               expected_output, '", but was "', output, '"')
     return is_correct
 
@@ -60,7 +60,6 @@ class TestPhonemConverter(unittest.TestCase):
     def test_german(self):
         phonem_converter = RuleBasedModels.EpitranPhonemConverter(
             epitran.Epitran('deu-Latn'))
-
         self.assertTrue(check_phonem_converter(
             phonem_converter, 'Hallo, das ist ein Test', 'haloː, dɑːs ɪst ain tɛst'))
 

@@ -1,15 +1,14 @@
-
-import torch
-import numpy as np
-import models as mo
-import WordMetrics
-import WordMatching as wm
-import epitran
-import ModelInterfaces as mi
-import AIModels
-import RuleBasedModels
-from string import punctuation
 import time
+from string import punctuation
+
+import epitran
+import numpy as np
+import torch
+
+from . import WordMatching as wm
+from . import WordMetrics
+from . import app_logger
+from .models import AIModels, ModelInterfaces as mi, RuleBasedModels, models as mo
 
 
 def getTrainer(language: str):
@@ -66,7 +65,7 @@ class PronunciationTrainer:
     def getWordsRelativeIntonation(self, Audio: torch.tensor, word_locations: list):
         intonations = torch.zeros((len(word_locations), 1))
         intonation_fade_samples = 0.3*self.sampling_rate
-        print(intonations.shape)
+        app_logger.info(intonations.shape)
         for word in range(len(word_locations)):
             intonation_start = int(np.maximum(
                 0, word_locations[word][0]-intonation_fade_samples))
@@ -85,12 +84,15 @@ class PronunciationTrainer:
         start = time.time()
         recording_transcript, recording_ipa, word_locations = self.getAudioTranscript(
             recordedAudio)
-        print('Time for NN to transcript audio: ', str(time.time()-start))
+
+        duration = time.time() - start
+        app_logger.info(f'Time for NN to transcript audio: {duration}.')
 
         start = time.time()
         real_and_transcribed_words, real_and_transcribed_words_ipa, mapped_words_indices = self.matchSampleAndRecordedWords(
             real_text, recording_transcript)
-        print('Time for matching transcripts: ', str(time.time()-start))
+        duration = time.time() - start
+        app_logger.info(f'Time for matching transcripts: {duration}.')
 
         start_time, end_time = self.getWordLocationsFromRecordInSeconds(
             word_locations, mapped_words_indices)

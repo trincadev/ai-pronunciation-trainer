@@ -4,9 +4,6 @@ import torch.nn as nn
 import pickle
 
 
-import pickle
-
-
 def getASRModel(language: str) -> nn.Module:
 
     if language == 'de':

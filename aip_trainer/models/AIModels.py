@@ -1,6 +1,7 @@
-import ModelInterfaces
-import torch
 import numpy as np
+import torch
+
+from aip_trainer.models import ModelInterfaces
 
 
 class NeuralASR(ModelInterfaces.IASRModel):

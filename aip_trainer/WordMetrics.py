@@ -1,7 +1,11 @@
 import numpy as np
 
+from aip_trainer import app_logger
+
+
 # ref from https://gitlab.com/-/snippets/1948157
 # For some variants, look here https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
+
 
 # Pure python
 def edit_distance_python2(a, b):
@@ -52,5 +56,5 @@ def edit_distance_python(seq1, seq2):
                     matrix[x-1,y-1] + 1,
                     matrix[x,y-1] + 1
                 )
-    #print (matrix)
+    app_logger.debug("matrix:{}\n".format(matrix))
     return matrix[size_x - 1, size_y - 1]

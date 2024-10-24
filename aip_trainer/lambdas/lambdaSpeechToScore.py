@@ -1,15 +1,17 @@
 
-import torch
+import base64
 import json
 import os
-import WordMatching as wm
-import utilsFileIO
-import pronunciationTrainer
-import base64
 import time
+
 import audioread
 import numpy as np
+import torch
 from torchaudio.transforms import Resample
+
+from aip_trainer import WordMatching as wm, app_logger
+from aip_trainer import pronunciationTrainer
+from aip_trainer import utilsFileIO
 
 
 trainer_SST_lambda = {
@@ -42,25 +44,28 @@ def lambda_handler(event, context):
         }
 
     start = time.time()
-    random_file_name = './'+utilsFileIO.generateRandomString()+'.ogg'
+    random_file_name = './' + utilsFileIO.generateRandomString() + '.ogg'
     f = open(random_file_name, 'wb')
     f.write(file_bytes)
     f.close()
-    print('Time for saving binary in file: ', str(time.time()-start))
+    duration = time.time() - start
+    app_logger.info(f'Time for saving binary in file: {duration}.')
 
     start = time.time()
     signal, fs = audioread_load(random_file_name)
 
     signal = transform(torch.Tensor(signal)).unsqueeze(0)
 
-    print('Time for loading .ogg file file: ', str(time.time()-start))
+    duration = time.time() - start
+    app_logger.info(f'Time for loading .ogg file file: {duration}.')
 
     result = trainer_SST_lambda[language].processAudioForGivenText(
         signal, real_text)
 
     start = time.time()
     os.remove(random_file_name)
-    print('Time for deleting file: ', str(time.time()-start))
+    duration = time.time() - start
+    app_logger.info(f'Time for deleting file: {duration}')
 
     start = time.time()
     real_transcripts_ipa = ' '.join(
@@ -90,7 +95,8 @@ def lambda_handler(event, context):
 
     pair_accuracy_category = ' '.join(
         [str(category) for category in result['pronunciation_categories']])
-    print('Time to post-process results: ', str(time.time()-start))
+    duration = time.time() - start
+    app_logger.info(f'Time to post-process results: {duration}')
 
     res = {'real_transcript': result['recording_transcript'],
            'ipa_transcript': result['recording_ipa'],

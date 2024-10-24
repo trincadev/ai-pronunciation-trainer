@@ -105,7 +105,7 @@ const UIRecordingError = () => {
 //################### Application state functions #######################
 function updateScore(currentPronunciationScore) {
 
-    if (isNaN(currentPronunciationScore))
+    if (Number.isNaN(currentPronunciationScore))
         return;
     currentScore += currentPronunciationScore * scoreMultiplier;
     currentScore = Math.round(currentScore);

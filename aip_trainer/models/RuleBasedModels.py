@@ -1,8 +1,6 @@
-import ModelInterfaces
-import torch
-import numpy as np
-import epitran
 import eng_to_ipa
+
+from aip_trainer.models import ModelInterfaces
 
 
 class EpitranPhonemConverter(ModelInterfaces.ITextToPhonemModel):

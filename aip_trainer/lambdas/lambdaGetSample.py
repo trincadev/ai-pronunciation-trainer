@@ -1,10 +1,12 @@
-
-import pandas as pd
 import json
-import RuleBasedModels
-import epitran
-import random
 import pickle
+import random
+from pathlib import Path
+
+import epitran
+
+from aip_trainer import PROJECT_ROOT_FOLDER
+from aip_trainer.models import RuleBasedModels
 
 
 class TextDataset:
@@ -27,11 +29,11 @@ class TextDataset:
         return self.number_of_samples
 
 
-sample_folder = "./"
+sample_folder = Path(PROJECT_ROOT_FOLDER / "aip_trainer" / "lambdas")
 lambda_database = {}
 lambda_ipa_converter = {}
 
-with open(sample_folder+'data_de_en_2.pickle', 'rb') as handle:
+with open(sample_folder / 'data_de_en_2.pickle', 'rb') as handle:
     df = pickle.load(handle)
 
 lambda_database['de'] = TextDataset(df, 'de')
