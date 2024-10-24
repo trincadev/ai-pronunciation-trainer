@@ -7,7 +7,7 @@ import random
 import pickle
 
 
-class TextDataset():
+class TextDataset:
     def __init__(self, table, language='-'):
         self.table_dataframe = table
         self.number_of_samples = len(table)
@@ -52,7 +52,7 @@ def lambda_handler(event, context):
 
     sample_in_category = False
 
-    while(not sample_in_category):
+    while not sample_in_category:
         valid_sequence = False
         while not valid_sequence:
             try:
@@ -85,5 +85,5 @@ def getSentenceCategory(sentence) -> int:
     number_of_words = len(sentence.split())
     categories_word_limits = [0, 8, 20, 100000]
     for category in range(len(categories_word_limits)-1):
-        if number_of_words > categories_word_limits[category] and number_of_words <= categories_word_limits[category+1]:
+        if categories_word_limits[category] < number_of_words <= categories_word_limits[category + 1]:
             return category+1

@@ -15,7 +15,7 @@ def test_category(category: int, threshold_min: int, threshold_max: int):
         response_dict = json.loads(response)
         number_of_words = len(
             response_dict['real_transcript'][0].split())
-        length_valid = number_of_words > threshold_min and number_of_words <= threshold_max
+        length_valid = threshold_min < number_of_words <= threshold_max
         if not length_valid:
             print('Category ', category,
                   ' had a sentence with length ', number_of_words)
@@ -65,8 +65,7 @@ class TestPhonemConverter(unittest.TestCase):
             phonem_converter, 'Hallo, das ist ein Test', 'haloː, dɑːs ɪst ain tɛst'))
 
 
-trainer_SST_lambda = {}
-trainer_SST_lambda['de'] = pronunciationTrainer.getTrainer("de")
+trainer_SST_lambda = {'de': pronunciationTrainer.getTrainer("de")}
 
 
 class TestScore(unittest.TestCase):

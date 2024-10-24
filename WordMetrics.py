@@ -11,9 +11,10 @@ def edit_distance_python2(a, b):
     if len(b) == 0:  # Can deal with empty sequences faster
         return len(a)
     # Only two rows are really needed: the one currently filled in, and the previous
-    distances = []
-    distances.append([i for i in range(len(b)+1)])
-    distances.append([0 for _ in range(len(b)+1)])
+    distances = [
+        [i for i in range(len(b) + 1)],
+        [0 for _ in range(len(b) + 1)]
+    ]
     # We can prefill the first row:
     costs = [0 for _ in range(3)]
     for i, a_token in enumerate(a, start=1):
@@ -27,7 +28,7 @@ def edit_distance_python2(a, b):
         distances[0][:] = distances[1][:]
     return distances[1][len(b)]
 
-#https://stackabuse.com/levenshtein-distance-and-text-similarity-in-python/
+# https://stackabuse.com/levenshtein-distance-and-text-similarity-in-python/
 def edit_distance_python(seq1, seq2):
     size_x = len(seq1) + 1
     size_y = len(seq2) + 1
@@ -52,4 +53,4 @@ def edit_distance_python(seq1, seq2):
                     matrix[x,y-1] + 1
                 )
     #print (matrix)
-    return (matrix[size_x - 1, size_y - 1])
+    return matrix[size_x - 1, size_y - 1]
