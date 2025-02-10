@@ -4,7 +4,7 @@ import os
 from flask_cors import CORS
 import json
 
-from constants import ALLOWED_ORIGIN, IS_TESTING, STSCOREAPIKEY
+from constants import ALLOWED_ORIGIN, IS_TESTING, PROJECT_ROOT_FOLDER, STSCOREAPIKEY
 import lambdaTTS
 import lambdaSpeechToScore
 import lambdaGetSample
@@ -70,7 +70,13 @@ def GetAccuracyFromRecordedAudio():
 
 
 if __name__ == "__main__":
-    language = 'de'
-    print(os.system('pwd'))
-    webbrowser.open_new('http://127.0.0.1:3000/')
-    app.run(host="0.0.0.0", port=3000)
+    try:
+        crt = 'https_localhost.crt'
+        print("crt: ", crt)
+        key = 'https_localhost.key'
+        print("key: ", key)
+        context = (crt, str) #certificate and key files
+        app.run(debug=True, ssl_context=context, host="0.0.0.0", port=3000)
+    except Exception as ex:
+        print("main_error: ", type(ex), "=>", ex, "#")
+        raise ex

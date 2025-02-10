@@ -1,8 +1,12 @@
 import {test, expect, chromium, Page} from "@playwright/test";
 import path from "node:path";
+import {audioRecorder} from "./helpers.js";
 import {customDataWithTestAudio, dataGetSample} from "./constants";
 
 let pageArray: Page[] = [];
+test.use({
+    ignoreHTTPSErrors: true,
+});
 
 const helperGetNextSentenceOutput = async (args: {page: Page, expectedText: string, expectedIPA: string}) => {
     const {page, expectedText, expectedIPA} = args;
@@ -30,14 +34,18 @@ const helperGetNextSentence = async (args: {page: Page, expectedText: string, ex
 test.describe("test: get a custom sample writing within the input field.", async () => {
     test.beforeAll(async ({}) => {
         const browser = await chromium.launch({
+            headless: false,
             args: [
                 "--use-fake-device-for-media-stream",
                 "--use-fake-ui-for-media-stream",
+                `--unsafely-treat-insecure-origin-as-secure='${process.env.BASE_URL}'`,
             ],
         });
-        const context = await browser.newContext();
+        const context = await browser.newContext({
+            ignoreHTTPSErrors: true
+        });
         await context.grantPermissions(["microphone"]);
-        let page = await browser.newPage({});
+        let page = await browser.newPage();
         pageArray.push(page);
         await page.goto("/");
         await expect(page).toHaveTitle("AI pronunciation trainer");
@@ -169,7 +177,13 @@ test.describe("test: get a custom sample writing within the input field.", async
              * - playCurrentWord
              * and compare them with the expected audio sounds
              */
+            const recorder = await audioRecorder();
+            recorder.start();
             await page.getByRole('link', { name: 'playSampleAudio' }).click();
+            await page.waitForTimeout(2000);
+            const audioSamplePlayed = await recorder.stop();
+            console.log(`audioSamplePlayed: `, typeof audioSamplePlayed, ">", audioSamplePlayed, "#");
+
             await page.getByRole('link', { name: 'playRecordedAudio' }).click();
 
             let idx = expectedText.split(" ").length - 1;

@@ -14,5 +14,9 @@
     "@playwright/test": "^1.50.1",
     "@types/node": "^22.13.1",
     "dotenv": "^16.4.7"
+  },
+  "dependencies": {
+    "@types/fluent-ffmpeg": "^2.1.27",
+    "fluent-ffmpeg": "^2.1.3"
   }
 }
